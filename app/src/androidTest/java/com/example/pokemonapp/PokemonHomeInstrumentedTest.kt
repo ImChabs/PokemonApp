@@ -9,12 +9,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class GreetingInstrumentedTest {
+class PokemonHomeInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun greeting_isDisplayedInMainActivity() {
-        composeTestRule.onNodeWithText("Hello Android!").assertIsDisplayed()
+    fun foundationScreen_isDisplayedInMainActivity() {
+        composeTestRule.onNodeWithText("Pokemon App Foundation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Ktor client and JSON serialization").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Next up: paginated Pokemon list and name search.").assertIsDisplayed()
     }
 }

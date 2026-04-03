@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">PokemonApp</string>
+    <string name="app_name">Pokemon App</string>
+    <string name="pokemon_home_title">Pokemon App Foundation</string>
+    <string name="pokemon_home_subtitle">The app shell, networking client, timeout configuration, and Pokemon models are ready for the first feature blocks.</string>
+    <string name="pokemon_home_status_title">Foundation status</string>
+    <string name="pokemon_home_config_title">Current configuration</string>
+    <string name="pokemon_home_next_block">Next up: paginated Pokemon list and name search.</string>
+    <string name="foundation_status_ready">Ready</string>
+    <string name="foundation_status_pending">Pending</string>
+    <string name="foundation_networking_label">Ktor client and JSON serialization</string>
+    <string name="foundation_timeout_label">HTTP timeout handling</string>
+    <string name="foundation_models_label">Pokemon DTO and domain models</string>
+    <string name="foundation_state_label">Explicit presentation state</string>
+    <string name="foundation_base_url_label">Base URL</string>
+    <string name="foundation_timeout_value">%1$s ms</string>
 </resources>
