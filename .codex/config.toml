@@ -1,0 +1,16 @@
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+allow_login_shell = false
+
+[sandbox_workspace_write]
+network_access = false
+
+[features]
+multi_agent = true
+
+[agents.validator_reviewer]
+description = "Optional post-Level-1 reviewer for completed blocks. Focuses on correctness, regressions, validation target choice, missing verification, and validation-report consistency."
+config_file = "./agents/validator_reviewer.toml"
