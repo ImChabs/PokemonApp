@@ -1,13 +1,14 @@
 package com.example.pokemonapp.pokemon.presentation.home
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
@@ -20,13 +21,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pokemonapp.pokemon.domain.model.PokemonListItem
 import com.example.pokemonapp.R
 import com.example.pokemonapp.ui.theme.PokemonAppTheme
 
 @Composable
 fun PokemonHomeRoot(
-    viewModel: PokemonHomeViewModel = viewModel()
+    viewModel: PokemonHomeViewModel
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -46,7 +47,6 @@ fun PokemonHomeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -58,98 +58,98 @@ fun PokemonHomeScreen(
             text = stringResource(R.string.pokemon_home_subtitle),
             style = MaterialTheme.typography.bodyLarge
         )
-        OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.pokemon_home_status_title),
-                    style = MaterialTheme.typography.titleMedium
+
+        when (val contentState = state.contentState) {
+            is PokemonHomeContentState.Error -> {
+                StateMessage(
+                    message = stringResource(contentState.messageRes),
+                    modifier = Modifier.weight(1f)
                 )
-                FoundationStatusRow(
-                    label = stringResource(R.string.foundation_networking_label),
-                    isReady = state.networkingConfigured
-                )
-                FoundationStatusRow(
-                    label = stringResource(R.string.foundation_timeout_label),
-                    isReady = state.timeoutConfigured
-                )
-                FoundationStatusRow(
-                    label = stringResource(R.string.foundation_models_label),
-                    isReady = state.pokemonModelsReady
-                )
-                FoundationStatusRow(
-                    label = stringResource(R.string.foundation_state_label),
-                    isReady = state.requestStateReady
+            }
+
+            PokemonHomeContentState.Loading -> {
+                LoadingState(modifier = Modifier.weight(1f))
+            }
+
+            is PokemonHomeContentState.Success -> {
+                PokemonListState(
+                    items = contentState.items,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
-        OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.pokemon_home_config_title),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                FoundationValueRow(
-                    label = stringResource(R.string.foundation_base_url_label),
-                    value = state.apiBaseUrl
-                )
-                FoundationValueRow(
-                    label = stringResource(R.string.foundation_timeout_label),
-                    value = stringResource(
-                        R.string.foundation_timeout_value,
-                        state.timeoutMillis.toString()
-                    )
-                )
-            }
+    }
+}
+
+@Composable
+private fun LoadingState(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            CircularProgressIndicator()
+            Text(
+                text = stringResource(R.string.pokemon_home_loading),
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
+    }
+}
+
+@Composable
+private fun StateMessage(
+    message: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
         Text(
-            text = stringResource(R.string.pokemon_home_next_block),
-            style = MaterialTheme.typography.bodyMedium
+            text = message,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
 
 @Composable
-private fun FoundationStatusRow(
-    label: String,
-    isReady: Boolean
+private fun PokemonListState(
+    items: List<PokemonListItem>,
+    modifier: Modifier = Modifier
 ) {
-    FoundationValueRow(
-        label = label,
-        value = stringResource(
-            if (isReady) {
-                R.string.foundation_status_ready
-            } else {
-                R.string.foundation_status_pending
-            }
-        )
-    )
-}
-
-@Composable
-private fun FoundationValueRow(
-    label: String,
-    value: String
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = label,
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.bodyMedium
+            text = stringResource(R.string.pokemon_home_list_title),
+            style = MaterialTheme.typography.titleMedium
         )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(
+                items = items,
+                key = { item -> item.detailUrl }
+            ) { item ->
+                OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = item.name,
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -159,12 +159,22 @@ private fun PokemonHomeScreenPreview() {
     PokemonAppTheme {
         PokemonHomeScreen(
             state = PokemonHomeState(
-                apiBaseUrl = "https://pokeapi.co/api/v2",
-                timeoutMillis = 15000L,
-                networkingConfigured = true,
-                timeoutConfigured = true,
-                pokemonModelsReady = true,
-                requestStateReady = true
+                contentState = PokemonHomeContentState.Success(
+                    items = listOf(
+                        PokemonListItem(
+                            name = "bulbasaur",
+                            detailUrl = "https://pokeapi.co/api/v2/pokemon/1/"
+                        ),
+                        PokemonListItem(
+                            name = "ivysaur",
+                            detailUrl = "https://pokeapi.co/api/v2/pokemon/2/"
+                        ),
+                        PokemonListItem(
+                            name = "venusaur",
+                            detailUrl = "https://pokeapi.co/api/v2/pokemon/3/"
+                        )
+                    )
+                )
             )
         )
     }

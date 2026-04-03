@@ -1,16 +1,10 @@
 <resources>
     <string name="app_name">Pokemon App</string>
-    <string name="pokemon_home_title">Pokemon App Foundation</string>
-    <string name="pokemon_home_subtitle">The app shell, networking client, timeout configuration, and Pokemon models are ready for the first feature blocks.</string>
-    <string name="pokemon_home_status_title">Foundation status</string>
-    <string name="pokemon_home_config_title">Current configuration</string>
-    <string name="pokemon_home_next_block">Next up: paginated Pokemon list and name search.</string>
-    <string name="foundation_status_ready">Ready</string>
-    <string name="foundation_status_pending">Pending</string>
-    <string name="foundation_networking_label">Ktor client and JSON serialization</string>
-    <string name="foundation_timeout_label">HTTP timeout handling</string>
-    <string name="foundation_models_label">Pokemon DTO and domain models</string>
-    <string name="foundation_state_label">Explicit presentation state</string>
-    <string name="foundation_base_url_label">Base URL</string>
-    <string name="foundation_timeout_value">%1$s ms</string>
+    <string name="pokemon_home_title">Pokemon</string>
+    <string name="pokemon_home_subtitle">The app now loads the first page from PokeAPI on launch.</string>
+    <string name="pokemon_home_loading">Loading the first page of Pokemon...</string>
+    <string name="pokemon_home_list_title">First page</string>
+    <string name="pokemon_home_error_generic">Couldn\'t load Pokemon right now. Please try again later.</string>
+    <string name="pokemon_home_error_no_internet">No internet connection. Check your network and try again.</string>
+    <string name="pokemon_home_error_timeout">The Pokemon request timed out. Please try again.</string>
 </resources>
