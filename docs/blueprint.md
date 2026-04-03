@@ -2,94 +2,132 @@
 
 ## Purpose
 
-This project is a neutral Android base used to validate and reuse agent-assisted development workflows. Its current purpose is operational rather than product-driven: provide just enough real Android surface area to exercise block handoffs, validation reporting, small compile and unit-test loops, and optional review-agent usage.
+This project is a native Android practice app focused on learning and validating HTTP networking with Ktor against a real public API.
 
-Keep this document project-specific. `AGENTS.md` holds durable repository rules; this blueprint holds the current product direction for this repository instance.
+The product goal is educational and technical: build a small but realistic Pokémon app that exercises request execution, response parsing, DTO modeling, optional mapping, error handling, timeout configuration, loading/error/success UI states, and manual retry flows.
+
+Keep this document project-specific. `AGENTS.md` holds durable repository rules; this blueprint holds the current product direction and scope for this repository.
 
 ## Product Direction
 
-Optimize for a clean, low-friction base that can support future Android projects without carrying product-specific assumptions.
+Optimize for a small, clean, and technically honest Android app that is useful for practicing networking fundamentals without unnecessary product complexity.
 
-For this operational trial:
-- keep the app intentionally tiny
-- prefer neutral naming and neutral copy
-- use the smallest real code changes needed to prove the workflow works end-to-end
+For this project:
+- keep the scope intentionally small
+- prioritize networking quality over feature breadth
+- prefer simple UX that clearly exposes loading, error, empty, and success states
+- use real API consumption instead of fake-only flows, while keeping tests deterministic
+- add abstraction only when it provides clear value
 
 ## Core Scope
 
-The current scope is limited to a minimal Android app shell that is sufficient to test:
-- block-based implementation flow
-- handoff continuity between executions
-- validation reporting
-- targeted compile validation
-- targeted unit-test validation
-- optional review-agent usage after Level 1 completion
+The current scope is limited to a Pokémon app that demonstrates:
 
-There is no active product feature scope yet beyond what is needed to keep the repository operational and verifiable.
+- Ktor HTTP client setup in Android
+- GET requests to a public Pokémon API
+- DTO-based response parsing
+- mappers only where they reduce coupling or improve clarity
+- repository-level error handling
+- timeout handling
+- loading, success, and error UI states
+- manual retry from the UI
+- search by Pokémon name
+- targeted unit tests for important logic
+- targeted Compose UI tests for important visible states
 
 ## Initial Scope Or MVP
 
-The first meaningful version of this repository instance should include:
-- one neutral screen or app surface that compiles cleanly
-- one tiny pure Kotlin behavior that can be covered by a unit test
-- a working handoff flow from one block to the next
-- a validation report that reflects what was actually run
+The first meaningful version of this repository should include:
+
+- a screen that shows a paginated Pokémon list
+- a search flow by Pokémon name
+- a Pokémon detail screen
+- real loading and error states in the UI
+- a manual retry action for failed requests
+- timeout configuration in the Ktor client
+- clear domain/UI models where direct DTO usage would be too coupled
+- unit tests for important repository/state logic
+- Compose UI tests for important screen states and interactions
 
 ## Priorities
 
-1. Reusable workflow quality
-2. Clear and accurate handoff artifacts
-3. Minimal, low-impact code changes
-4. Reliable targeted verification
-5. Future product flexibility
+1. Correct and understandable networking flow
+2. Clear state handling in the UI
+3. Strong error handling and timeout behavior
+4. Small, maintainable architecture
+5. Relevant tests only
+6. Minimal overengineering
 
 ## Out Of Scope For Now
 
-- real product features
-- navigation flows
-- persistence
-- networking
 - authentication
-- background work
-- broad UI polish
-- architecture depth beyond what the current block needs
+- POST/PUT/DELETE flows
+- local persistence or offline-first behavior
+- background sync
+- push notifications
+- multi-module architecture
+- aggressive caching strategies
+- advanced design/polish work
+- complex search/filter combinations beyond name search
+- broad test coverage for trivial code
 
 ## Technical Direction
 
 - Keep the project single-module for now.
-- Keep the app local-only and offline by default.
-- Prefer pure Kotlin logic when a unit-test target is needed.
-- Add Android-specific structure only when a future project direction actually requires it.
+- Use native Android with Kotlin and Jetpack Compose.
+- Use Ktor as the networking client.
+- Use Kotlin serialization or another Ktor-compatible serialization approach as needed.
+- Model network responses with DTOs.
+- Introduce mappers only when they meaningfully improve separation between API models and app-facing models.
+- Prefer a simple layered structure such as UI / data / domain-like boundaries without forcing unnecessary abstractions.
+- Represent request states explicitly in presentation logic.
+- Keep retry user-driven in the UI.
+- Prefer deterministic unit tests for data/state logic and targeted Compose UI tests for visible behavior.
+- Use fake data sources or Ktor MockEngine in tests when real network dependency would reduce reliability.
 
 ## Roadmap
 
-- Phase 1: Operational base validation
-  Prove that the repository workflows, handoffs, validation scripts, and review agent work in real usage.
-- Phase 2: Minimal reusable app shell
-  Keep a tiny neutral Android shell that future blocks can extend without undoing the operational setup.
-- Phase 3: Future project specialization
-  Allow a later project to replace this minimal direction with real product goals while preserving the reusable workflow layer.
+- Phase 1: App foundation
+  Set up app shell, Ktor client, base networking configuration, serialization, timeout support, and foundational models/state handling.
+
+- Phase 2: Pokémon list and search
+  Implement paginated list loading and search by Pokémon name, including loading, empty, and error states.
+
+- Phase 3: Pokémon detail
+  Implement detail screen with relevant Pokémon information from the API, keeping the data flow simple and explicit.
+
+- Phase 4: Hardening and relevant tests
+  Improve error handling, manual retry flows, and add targeted unit tests plus targeted Compose UI tests for important scenarios.
 
 ## Block Strategy
 
-Implementation should happen in small blocks. For the current phase, each block should primarily improve confidence in the reusable workflow layer, not expand the app into a real product.
+Implementation should happen in small blocks. Each block should produce a meaningful, verifiable improvement in the app.
+
+Preferred block shape:
+- one clear networking or UI milestone per block
+- one small validation target per block
+- tests only when the block introduces meaningful logic or a meaningful user-visible state
 
 This blueprint provides persistent direction across multiple block-based chats:
 - `handoff/next-block.md` defines the immediate next block
 - this blueprint defines the broader destination and boundaries
 
-If a future block conflicts with this blueprint, prefer the smaller and more operationally focused interpretation unless the product direction is intentionally updated.
+If a future block conflicts with this blueprint, prefer the smaller and simpler implementation that still satisfies the learning goals.
 
 ## Success Criteria
 
-This repository instance is successful if it remains:
-- maintainable
-- neutral
-- easy to verify
-- usable as a starting point for future Android projects with agent-assisted workflows
+This repository is successful if it becomes:
+
+- a clean Ktor networking practice project
+- easy to understand and extend
+- able to demonstrate real request/response handling end to end
+- explicit about loading, error, and retry behavior
+- covered by a small but relevant set of unit tests and Compose UI tests
+- free of unnecessary architectural complexity
 
 ## Maintenance Notes
 
-- Update this document when the product direction changes in a durable way.
-- Do not use this file as a task log or archive.
-- Keep historical implementation details in handoff artifacts, not here.
+- Update this document when the project direction changes in a durable way.
+- Keep this file focused on product/technical direction, not task history.
+- Keep temporary execution details and progress tracking in handoff artifacts, not here.
+- Do not expand scope casually; protect the networking-focused learning goal.
