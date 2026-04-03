@@ -1,4 +1,4 @@
-package com.example.baseaiproject
+package com.example.pokemonapp
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

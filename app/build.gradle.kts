@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.baseaiproject"
+    namespace = "com.example.pokemonapp"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.baseaiproject"
+        applicationId = "com.example.pokemonapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

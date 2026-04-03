@@ -1,4 +1,4 @@
-package com.example.baseaiproject.ui.theme
+package com.example.pokemonapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -7,8 +7,8 @@ Move the greeting composable and preview out of `MainActivity.kt` into a dedicat
 Relevant files
 - AGENTS.md
 - handoff/validation-report.md
-- app/src/main/java/com/example/baseaiproject/MainActivity.kt
-- app/src/main/java/com/example/baseaiproject/GreetingScreen.kt
+- app/src/main/java/com/example/pokemonapp/MainActivity.kt
+- app/src/main/java/com/example/pokemonapp/GreetingScreen.kt
 - scripts/validate-compile.ps1
 
 Constraints

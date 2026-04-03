@@ -1,25 +1,25 @@
-﻿# BaseAiProject
+﻿# PokemonApp
 
-BaseAiProject is a reusable Android base repository for future AI-assisted Android development. It is intentionally small: a minimal Jetpack Compose app scaffold plus a repo workflow layer for durable instructions, narrow validation, block handoffs, and reusable agent skills.
+PokemonApp is a native Android practice app focused on learning and validating HTTP networking with Ktor against a real public API. It is intentionally small today: a minimal Jetpack Compose app scaffold plus a repo workflow layer for durable instructions, narrow validation, block handoffs, and reusable agent skills.
 
-This repository is not a finished product and it is not trying to be a full app architecture out of the box. Its current purpose is to be a practical starting point that stays easy to verify, easy to hand off, and easy to specialize into a real Android project later.
+This repository is not a finished product and it is not trying to be a full app architecture out of the box. Its current purpose is to stay easy to verify, easy to hand off, and easy to grow into a small but realistic Pokemon-focused Android project.
 
 ## What This Repository Is
 
 This repo combines two concerns:
 
-- A minimal Android template built with Kotlin, Jetpack Compose, Material 3, and Gradle Kotlin DSL.
+- A small Android app scaffold built with Kotlin, Jetpack Compose, Material 3, and Gradle Kotlin DSL.
 - An operational workflow base for agent-assisted development, including durable repo rules, validation scripts, handoff artifacts, and repo-local skills.
 
-The Android side gives you a clean shell to start from. The workflow side gives you structure for making small, reviewable changes without losing continuity between sessions.
+The Android side keeps the product surface intentionally small while the workflow side gives structure for making small, reviewable changes without losing continuity between sessions.
 
 ## Why It Exists
 
-The repository exists to validate and reuse a disciplined development workflow in a real Android codebase without carrying product-specific assumptions.
+The repository exists to practice a disciplined Android development workflow in a real codebase while building a small Pokemon networking app.
 
 Its main goals are:
 
-- Keep a neutral Android starting point that can be reused for future projects.
+- Build a small, technically honest Pokemon app without unnecessary product complexity.
 - Preserve durable repository rules in one place.
 - Encourage small implementation blocks with explicit handoff continuity.
 - Prefer targeted validation over broad rebuilds.
@@ -41,7 +41,7 @@ Current stack in the repo:
 Current scaffold state:
 
 - Single-module project with one `:app` module.
-- Neutral template identity is still present: project name `BaseAiProject`, package `com.example.baseaiproject`.
+- Shipped project identity now uses project name `PokemonApp` and package `com.example.pokemonapp`.
 - Minimal app surface: `MainActivity` renders a single greeting using a tiny pure Kotlin formatter.
 - One unit test covers the formatter.
 - One instrumented Compose test checks that the greeting is displayed.
@@ -137,7 +137,7 @@ Those wrappers are documented in `docs/automation-harness.md`. They rely on the 
 - `.codex/`: optional repo-local Codex configuration, including the read-only `validator_reviewer` subagent.
 - `run-blocks.ps1` / `run-blocks.sh`: optional fixed-count block runners.
 
-## Skills And Template Guidance
+## Skills And Repo Guidance
 
 The skills under `.agents/skills/` are operational guidance, not proof that every described technology is already installed in the app.
 
@@ -158,18 +158,16 @@ Some skills describe preferred defaults for future derived projects, including:
 
 Use them as repo-local guidance when that concern becomes relevant. Do not read them as a claim that the current scaffold already includes Koin, Room, Ktor, multi-module architecture, or a full feature stack.
 
-## Using This Repo As A Starting Point
+## Growing This Repo
 
-A practical way to reuse this repository for a new Android project is:
+A practical way to evolve this repository is:
 
-1. Copy or template the repository.
-2. Rename the shipped project identity conservatively: app name, package, namespace, `applicationId`, and related paths. The repo includes guidance for this in `.agents/skills/android-project-identity-customization/`.
-3. Update `docs/blueprint.md` to reflect the real product direction for the derived project.
-4. Keep `AGENTS.md` if its durable rules still fit, or revise it deliberately if your project needs different conventions.
-5. Replace the tiny app shell incrementally instead of doing a broad rewrite all at once.
-6. Continue using the repo validation scripts and handoff artifacts for each coherent block of work.
+1. Keep `docs/blueprint.md` aligned with the real product direction.
+2. Replace the tiny app shell incrementally instead of doing a broad rewrite all at once.
+3. Keep `AGENTS.md` as the durable source of repo behavior unless the project genuinely needs a deliberate rule change.
+4. Continue using the repo validation scripts and handoff artifacts for each coherent block of work.
 
-If you only want the Android scaffold, you can ignore most of the agent-specific layer and still use the app as a clean starting point. If you want continuity across AI-assisted sessions, keep the workflow files in place and treat them as part of the template.
+If you only want the Android scaffold, you can ignore most of the agent-specific layer and still use the app as a clean starting point. If you want continuity across AI-assisted sessions, keep the workflow files in place and treat them as part of the repository's operating layer.
 
 ## Important Notes
 

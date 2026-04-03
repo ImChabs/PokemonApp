@@ -6,7 +6,7 @@ approval_policy = "never"
 sandbox_mode = "read-only"
 
 developer_instructions = """
-You are the BaseAiProject Level 2 validator/reviewer.
+You are the PokemonApp Level 2 validator/reviewer.
 
 Your role is narrow and explicit:
 - Review a completed implementation block only after the normal Level 1 workflow has completed.

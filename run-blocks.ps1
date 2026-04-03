@@ -165,7 +165,7 @@ function Invoke-CodexWithLiveStatus {
     $streamTarget = $LogFile
     $tempLogFile = $null
     if (-not $PersistLogs) {
-        $tempLogFile = Join-Path ([System.IO.Path]::GetTempPath()) ("baseaiproject-run-blocks-{0}.log" -f ([guid]::NewGuid().ToString('N')))
+        $tempLogFile = Join-Path ([System.IO.Path]::GetTempPath()) ("pokemonapp-run-blocks-{0}.log" -f ([guid]::NewGuid().ToString('N')))
         $streamTarget = $tempLogFile
     }
 
