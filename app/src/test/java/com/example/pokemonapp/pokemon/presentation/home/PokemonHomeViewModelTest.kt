@@ -36,7 +36,7 @@ class PokemonHomeViewModelTest {
     @Test
     fun init_loadsTheFirstPokemonPage() = runTest {
         val fakeDataSource = FakePokemonRemoteDataSource(
-            result = Result.Success(
+            pageResult = Result.Success(
                 PokemonListPage(
                     items = listOf(
                         PokemonListItem(
@@ -66,7 +66,7 @@ class PokemonHomeViewModelTest {
     @Test
     fun init_mapsTimeoutErrorsIntoErrorState() = runTest {
         val fakeDataSource = FakePokemonRemoteDataSource(
-            result = Result.Error(DataError.Network.REQUEST_TIMEOUT)
+            pageResult = Result.Error(DataError.Network.REQUEST_TIMEOUT)
         )
 
         val viewModel = PokemonHomeViewModel(fakeDataSource)
@@ -76,14 +76,61 @@ class PokemonHomeViewModelTest {
         contentState as PokemonHomeContentState.Error
         assertEquals(R.string.pokemon_home_error_timeout, contentState.messageRes)
     }
+
+    @Test
+    fun onSearchSubmit_loadsPokemonBySubmittedName() = runTest {
+        val fakeDataSource = FakePokemonRemoteDataSource(
+            searchResult = Result.Success(
+                PokemonListItem(
+                    name = "pikachu",
+                    detailUrl = "https://pokeapi.co/api/v2/pokemon/25/"
+                )
+            )
+        )
+        val viewModel = PokemonHomeViewModel(fakeDataSource)
+
+        viewModel.onAction(PokemonHomeAction.OnSearchQueryChange(" Pikachu "))
+        viewModel.onAction(PokemonHomeAction.OnSearchSubmit)
+
+        val searchState = viewModel.state.value.searchState
+        assertTrue(searchState is PokemonSearchState.Success)
+        searchState as PokemonSearchState.Success
+        assertEquals("pikachu", searchState.item.name)
+        assertEquals("pikachu", fakeDataSource.lastRequestedName)
+    }
+
+    @Test
+    fun onSearchSubmit_mapsNotFoundIntoEmptyState() = runTest {
+        val fakeDataSource = FakePokemonRemoteDataSource(
+            searchResult = Result.Error(DataError.Network.NOT_FOUND)
+        )
+        val viewModel = PokemonHomeViewModel(fakeDataSource)
+
+        viewModel.onAction(PokemonHomeAction.OnSearchQueryChange("missingno"))
+        viewModel.onAction(PokemonHomeAction.OnSearchSubmit)
+
+        val searchState = viewModel.state.value.searchState
+        assertTrue(searchState is PokemonSearchState.Empty)
+        searchState as PokemonSearchState.Empty
+        assertEquals("missingno", searchState.query)
+    }
 }
 
 private class FakePokemonRemoteDataSource(
-    private val result: Result<PokemonListPage, DataError.Network>
+    private val pageResult: Result<PokemonListPage, DataError.Network> = Result.Success(
+        PokemonListPage(
+            items = emptyList(),
+            canLoadMore = false
+        )
+    ),
+    private val searchResult: Result<PokemonListItem, DataError.Network> = Result.Error(
+        DataError.Network.NOT_FOUND
+    )
 ) : PokemonRemoteDataSource {
 
     var lastRequestedLimit: Int? = null
     var lastRequestedOffset: Int? = null
+    var lastRequestedName: String? = null
 
     override suspend fun getPokemonPage(
         limit: Int,
@@ -91,6 +138,13 @@ private class FakePokemonRemoteDataSource(
     ): Result<PokemonListPage, DataError.Network> {
         lastRequestedLimit = limit
         lastRequestedOffset = offset
-        return result
+        return pageResult
+    }
+
+    override suspend fun getPokemonByName(
+        name: String
+    ): Result<PokemonListItem, DataError.Network> {
+        lastRequestedName = name
+        return searchResult
     }
 }

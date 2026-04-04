@@ -7,6 +7,7 @@ import com.example.pokemonapp.pokemon.domain.model.PokemonListItem
 import com.example.pokemonapp.pokemon.presentation.home.PokemonHomeContentState
 import com.example.pokemonapp.pokemon.presentation.home.PokemonHomeScreen
 import com.example.pokemonapp.pokemon.presentation.home.PokemonHomeState
+import com.example.pokemonapp.pokemon.presentation.home.PokemonSearchState
 import com.example.pokemonapp.ui.theme.PokemonAppTheme
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
@@ -25,7 +26,8 @@ class PokemonHomeInstrumentedTest {
                 PokemonHomeScreen(
                     state = PokemonHomeState(
                         contentState = PokemonHomeContentState.Loading
-                    )
+                    ),
+                    onAction = {}
                 )
             }
         }
@@ -52,7 +54,8 @@ class PokemonHomeInstrumentedTest {
                                 )
                             )
                         )
-                    )
+                    ),
+                    onAction = {}
                 )
             }
         }
@@ -60,5 +63,32 @@ class PokemonHomeInstrumentedTest {
         composeTestRule.onNodeWithText("First page").assertIsDisplayed()
         composeTestRule.onNodeWithText("bulbasaur").assertIsDisplayed()
         composeTestRule.onNodeWithText("charmander").assertIsDisplayed()
+    }
+
+    @Test
+    fun searchState_showsSearchResultCard() {
+        composeTestRule.setContent {
+            PokemonAppTheme {
+                PokemonHomeScreen(
+                    state = PokemonHomeState(
+                        searchQuery = "pikachu",
+                        searchState = PokemonSearchState.Success(
+                            item = PokemonListItem(
+                                name = "pikachu",
+                                detailUrl = "https://pokeapi.co/api/v2/pokemon/25/"
+                            )
+                        ),
+                        contentState = PokemonHomeContentState.Success(
+                            items = emptyList()
+                        )
+                    ),
+                    onAction = {}
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithText("Search by Pokemon name").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Search result").assertIsDisplayed()
+        composeTestRule.onNodeWithText("pikachu").assertIsDisplayed()
     }
 }

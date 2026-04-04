@@ -65,6 +65,46 @@ class KtorPokemonRemoteDataSourceTest {
         assertEquals(DataError.Network.SERVER_ERROR, (result as Result.Error).error)
     }
 
+    @Test
+    fun getPokemonByName_returnsMappedPokemonItem() = runBlocking {
+        val httpClient = createHttpClient(
+            status = HttpStatusCode.OK,
+            body = """
+                {
+                  "id": 25,
+                  "name": "pikachu"
+                }
+            """.trimIndent()
+        ) { requestedUrl ->
+            assertEquals(
+                "https://pokeapi.co/api/v2/pokemon/pikachu",
+                requestedUrl
+            )
+        }
+        val dataSource = KtorPokemonRemoteDataSource(httpClient)
+
+        val result = dataSource.getPokemonByName("pikachu")
+
+        assertTrue(result is Result.Success)
+        val item = (result as Result.Success).data
+        assertEquals("pikachu", item.name)
+        assertEquals("https://pokeapi.co/api/v2/pokemon/25/", item.detailUrl)
+    }
+
+    @Test
+    fun getPokemonByName_mapsNotFoundErrors() = runBlocking {
+        val httpClient = createHttpClient(
+            status = HttpStatusCode.NotFound,
+            body = """{"detail":"not found"}"""
+        )
+        val dataSource = KtorPokemonRemoteDataSource(httpClient)
+
+        val result = dataSource.getPokemonByName("missingno")
+
+        assertTrue(result is Result.Error)
+        assertEquals(DataError.Network.NOT_FOUND, (result as Result.Error).error)
+    }
+
     private fun createHttpClient(
         status: HttpStatusCode,
         body: String,
